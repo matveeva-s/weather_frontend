@@ -5,10 +5,6 @@ class App extends React.Component {
   constructor(props, context) {
     super(props, context);
     this._addHandlers();
-    this.state = {
-        store: props.store,
-        cities: props.store.cities,
-    }
   }
   _addHandlers() {
     this.handleSubmit = this.handleSubmit.bind(this);
@@ -32,33 +28,48 @@ class App extends React.Component {
             cityId = 0;
     }
     this.props.GetWeather(cityId);
-    this.render();
-    return false;
+    this.forceUpdate();
   }
   render() {
-      console.log(
-          this.props.store.cities[0].temp,
-          this.props.store.cities[1].temp,
-          this.props.store.cities[2].temp
-      );
     return (
-        <div>
-          <form id="form">
-            <select id="select">
-              <option> {this.props.store.cities[0].name} </option>
-              <option> {this.props.store.cities[1].name} </option>
-              <option> {this.props.store.cities[2].name} </option>
-            </select>
-            <button onClick={this.handleSubmit}> Find weather! </button>
-          </form>
-          <div>
-              temp1 = {this.props.store.cities[0].temp}
-              temp2 = {this.props.store.cities[1].temp}
-              temp3 = {this.props.store.cities[2].temp}
+        <div id="main">
+          <div id="form">
+            <form>
+              <SelectForm store={this.props.store}/>
+              <br/>
+              <br/>
+              <button id="button" onClick={this.handleSubmit}> Find weather! </button>
+            </form>
           </div>
+          <br/>
+          <Result store={this.props.store}/>
         </div>
     )
   }
+}
+
+function SelectForm(props) {
+    return (
+        <select id="select">
+            <option> {props.store.cities[0].name} </option>
+            <option> {props.store.cities[1].name} </option>
+            <option> {props.store.cities[2].name} </option>
+        </select>
+    )
+}
+
+function Result(props) {
+    let cityId = props.store.selected;
+    return (
+        <div>
+            Current weather data in {props.store.cities[cityId].name}:
+            <ul>
+                <li>temperature = {props.store.cities[cityId].temp} degrees Celsius</li>
+                <li>pressure = {props.store.cities[cityId].pres} mBar</li>
+                <li>humidity = {props.store.cities[cityId].him} %</li>
+            </ul>
+        </div>
+    )
 }
 
 export default connect(
