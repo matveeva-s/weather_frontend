@@ -36,7 +36,7 @@ function Reducer(state = initialState, action) {
         let copy = state;
         let id = action.payload;
         copy.selected = id;
-        let path = "/data/2.5/weather?q=" + state.cities[id].name + "," + state.cities[id].index + "&appid=b41984b8b5135f1695c5faac30990138";
+        let path = "https://api.openweathermap.org/data/2.5/weather?q=" + state.cities[id].name + "," + state.cities[id].index + "&appid=b41984b8b5135f1695c5faac30990138";
         fetch(path)
             .then((resp) => (
                 resp.json().then(data =>
