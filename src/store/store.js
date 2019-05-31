@@ -1,4 +1,7 @@
 import {createStore} from "redux";
+import {applyMiddleware} from "redux";
+import {composeWithDevTools} from "redux-devtools-extension";
+import thunk from "redux-thunk";
 
 const initialState = {
     "selected": 0,
@@ -31,22 +34,16 @@ function Reducer(state = initialState, action) {
     if (action.type === 'GET_WEATHER') {
         console.log("GET_WEATHER called");
         let copy = state;
-        let id = action.payload;
-        copy.selected = id;
-        let path = "https://api.openweathermap.org/data/2.5/weather?q=" + state.cities[id].name + "," + state.cities[id].index + "&appid=b41984b8b5135f1695c5faac30990138";
-        fetch(path)
-            .then((resp) => (
-                resp.json().then(data =>
-                {
-                    copy.cities[id].temp =  (data.main.temp - 273).toFixed(2);
-                    copy.cities[id].pres =  (data.main.pressure);
-                    copy.cities[id].him =  (data.main.humidity);
-                })
-            ));
+        let id = action.payload[0];
+        let data = action.payload[1];
+        copy.cities[id].temp =  (data.temp - 273).toFixed(2);
+        copy.cities[id].pres =  data.pressure;
+        copy.cities[id].him =  data.humidity;
         console.log("New ", copy.cities[id].name, " temp is ", copy.cities[id].temp);
         return copy;
     }
     if (action.type === 'CHANGE_CITY') {
+        console.log("CHANGE_CITY called");
         let copy = state;
         copy.selected = action.payload;
         return copy;
@@ -56,7 +53,7 @@ function Reducer(state = initialState, action) {
 }
 
 
-const store = createStore(Reducer,  window.__REDUX_DEVTOOLS_EXTENSION__&& window.__REDUX_DEVTOOLS_EXTENSION__());
+const store = createStore(Reducer,  composeWithDevTools(applyMiddleware(thunk)));
 
 store.subscribe(() => {
     //console.log('subscribe', store.getState());

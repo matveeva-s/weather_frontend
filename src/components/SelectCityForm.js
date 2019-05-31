@@ -1,7 +1,7 @@
 import React from "react";
 import GetCityNumber from './GetCityNumber'
 import {connect} from "react-redux";
-
+import {changeCity} from "./../store/actions"
 
 class SelectCityForm extends React.Component {
     constructor(props, context) {
@@ -29,9 +29,7 @@ export default connect(
     }),
     dispatch => ({
         changeCity: (cityId)=> {
-            dispatch({type: 'CHANGE_CITY', payload: cityId})
+            dispatch(changeCity(cityId))
         }
     })
 )(SelectCityForm);
-
-//export default SelectCityForm;

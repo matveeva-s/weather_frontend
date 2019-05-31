@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux'
 import SelectCityForm from './components/SelectCityForm'
 import WeatherData from './components/WeatherData'
+import {getCityWeather} from "./store/actions";
 
 class App extends React.Component {
     constructor(props, context) {
@@ -12,7 +13,7 @@ class App extends React.Component {
     handleSubmit(event) {
         event.preventDefault();
         this.props.getWeather(this.props.store.selected);
-        //this.forceUpdate();
+        this.forceUpdate();
     }
     render() {
         return (
@@ -37,8 +38,9 @@ export default connect(
         store: state,
     }),
     dispatch => ({
-        getWeather: (cityName)=> {
-            dispatch({type: 'GET_WEATHER', payload: cityName})
+        getWeather: (id) => {
+            dispatch(getCityWeather(id))
         }
     })
+
 )(App);
